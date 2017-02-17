@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin
+    id="cordova-plugin-star-printer"
+    version="0.0.1"
+    xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <name>star-printer-plugin</name>
+    
+    <js-module name="star-printer-plugin" src="www/star-printer-plugin.js">
+        <clobbers target="cordova.plugins.star-printer-plugin" />
+    </js-module><platform name="ios">
+        
+        <config-file parent="/*" target="config.xml">
+            <feature name="star-printer-plugin">
+                <param name="ios-package" value="star-printer-plugin" />
+            </feature>
+        </config-file>
+        
+        <source-file src="src/ios/star-printer-plugin.m" />
+        
+        <framework src="ExternalAccessory.framework" />
+        <framework src="CoreBluetooth.framework" />
+    </platform>
+</plugin>
