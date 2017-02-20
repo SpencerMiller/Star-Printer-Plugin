@@ -18,7 +18,8 @@
         </config-file>
         
         <source-file src="src/ios/StarPrinter.m" />
-        
+        <source-file src="src/ios/StarIO.framework"/>
+
         <framework src="ExternalAccessory.framework" />
         <framework src="CoreBluetooth.framework" />
     </platform>

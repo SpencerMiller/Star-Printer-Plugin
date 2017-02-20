@@ -1,18 +1,18 @@
-/********* star-printer-plugin.m Cordova Plugin Implementation *******/
+/********* StarPrinter.m Cordova Plugin Implementation *******/
 
 #import <Foundation/Foundation.h>
 
 #import <Cordova/CDV.h>
 #import <StarIO/SMPort.h>
 
-@interface star-printer-plugin : CDVPlugin {
+@interface StarPrinter : CDVPlugin {
   // Member variables go here.
 }
 
 - (void)getPrinters:(CDVInvokedUrlCommand*)command;
 @end
 
-@implementation star-printer-plugin
+@implementation StarPrinter
 
 - (void)getPrinters:(CDVInvokedUrlCommand*)command
 {
