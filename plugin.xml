@@ -17,6 +17,14 @@
             </feature>
         </config-file>
         
+        <!--<header-file src="src/ios/StarIO.framework/Headers/BluetoothPort.h">
+        <header-file src="src/ios/StarIO.framework/Headers/enum.h">
+        <header-file src="src/ios/StarIO.framework/Headers/Lock.h">
+        <header-file src="src/ios/StarIO.framework/Headers/Port.h">
+        <header-file src="src/ios/StarIO.framework/Headers/SMBluetoothManager.h">-->
+        <header-file src="src/ios/StarIO.framework/Headers/SMPort.h">
+        <!--<header-file src="src/ios/StarIO.framework/Headers/SMProxiPRNTManager.h">
+        <header-file src="src/ios/StarIO.framework/Headers/WBluetoothPort.h">-->
         <source-file src="src/ios/StarPrinter.m" />
         <!--<source-file src="src/ios/StarIO.framework" />-->
 
