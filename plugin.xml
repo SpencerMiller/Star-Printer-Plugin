@@ -30,6 +30,6 @@
 
         <framework src="ExternalAccessory.framework" />
         <framework src="CoreBluetooth.framework" />
-        <framework src="src/ios/StarIO.framework" />
+        <framework src="src/ios/StarIO.framework" custom="true" />
     </platform>
 </plugin>
