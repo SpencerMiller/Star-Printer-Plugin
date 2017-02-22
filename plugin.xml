@@ -12,6 +12,11 @@
     </js-module>
     
     <platform name="ios">
+        <config-file target="*-Info.plist" parent="Supported external accessory protocols">
+            <array>
+                "jp.star-m.starpro"
+            </array>
+        </config-file>
         
         <config-file target="config.xml" parent="/*" >
             <feature name="OmniPrinter">
