@@ -3,7 +3,7 @@
 #import <Foundation/Foundation.h>
 
 #import <Cordova/CDV.h>
-#import <StarIO/SMPort.h>
+#import "StarIO/SMPort.h"
 
 @interface StarPrinter : CDVPlugin {
   // Member variables go here.

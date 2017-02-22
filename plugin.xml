@@ -32,6 +32,8 @@
 
         <framework src="ExternalAccessory.framework" />
         <framework src="CoreBluetooth.framework" />
-        <framework src="src/ios/StarIO.framework" />
+        
+        <!-- Note this sort of works.  Will put the frame work in the build dependencies.  But the frame work has the incorrect path -->
+        <!--<framework src="src/ios/StarIO.framework" />-->
     </platform>
 </plugin>
