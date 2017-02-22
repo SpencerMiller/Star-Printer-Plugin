@@ -9,9 +9,9 @@
 
 @implementation StarPrinter
 
-- (void)getPrinters:(CDVInvokedUrlCommand*)command
+- (void)findDevices:(CDVInvokedUrlCommand*)command
 {
-    NSLog(@"Inside getPrinters()");
+    NSLog(@"Inside findDevices()");
     CDVPluginResult *pluginResult = nil;
     
     NSArray *portArray = [SMPort searchPrinter];

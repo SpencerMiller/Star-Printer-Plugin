@@ -9,6 +9,6 @@
   // Member variables go here.
 }
 
-- (void)getPrinters:(CDVInvokedUrlCommand*)command;
+- (void)findDevices:(CDVInvokedUrlCommand*)command;
 @end
 
