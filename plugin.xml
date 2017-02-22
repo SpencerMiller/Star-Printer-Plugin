@@ -14,7 +14,7 @@
     <platform name="ios">
         <config-file target="*-Info.plist" parent="Supported external accessory protocols">
             <array>
-                "jp.star-m.starpro"
+                jp.star-m.starpro
             </array>
         </config-file>
         
