@@ -25,11 +25,13 @@
         <!--<header-file src="src/ios/star_io_framework/Headers/SMPort.h" />-->
         <!--<header-file src="src/ios/StarIO.framework/Headers/SMProxiPRNTManager.h">
         <header-file src="src/ios/StarIO.framework/Headers/WBluetoothPort.h">-->
-        <source-file src="src/ios/StarPrinter.m" />
         <!--<source-file src="src/ios/StarIO.framework" />-->
+        <source-file src="src/ios/StarPrinter.m" />
+        <source-file src="src/ios/StarIO.framework/Versions/A/StarIO" framework="true" />  
+        <header-file src="src/ios/StarIO.framework/Versions/A/Headers/SMPort.h" />
 
         <framework src="ExternalAccessory.framework" />
         <framework src="CoreBluetooth.framework" />
-        <framework src="src/ios/StarIO.framework" custom="true" />
+        <framework src="src/ios/StarIO.framework" />
     </platform>
 </plugin>
