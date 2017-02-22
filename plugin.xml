@@ -14,7 +14,7 @@
     <platform name="ios">
         
         <config-file target="config.xml" parent="/*" >
-            <feature name="star-printer-plugin">
+            <feature name="StarPrinter">
                 <param name="ios-package" value="StarPrinter" />
             </feature>
         </config-file>
