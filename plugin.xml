@@ -1,14 +1,14 @@
 <?xml version='1.0' encoding='utf-8'?>
 <plugin
-    id="cordova-plugin-star-printer"
+    id="omni-printer-plugin"
     version="0.0.1"
     xmlns="http://apache.org/cordova/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android">
     
     <name>star-printer-plugin</name>
     
-    <js-module name="star-printer-plugin" src="www/star-printer-plugin.js">
-        <clobbers target="cordova.plugins.StarPrinter" />
+    <js-module name="omni-printer-plugin" src="www/plugin.js">
+        <clobbers target="OmniPrinter" />
     </js-module>
     
     <platform name="ios">
@@ -26,5 +26,21 @@
         <source-file src="src/ios/StarPrinter.m" />
         <header-file src="src/ios/StarPrinter.h" />
         
+    </platform>
+
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="OmniPrinter">
+                <param name="android-package" value="net.omnidispatch.ionic.OmniPrinterPlugin" />
+            </feature>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.BLUETOOTH"/>
+            <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+        </config-file>
+
+        <source-file src="src/android/net/omnidispatch/ionic/OmniPrinterPlugin.java" target-dir="src/net/omnidispatch/ionic/" />
+        <source-file src="src/android/StarIOPort3.1.jar" target-dir="libs" />
     </platform>
 </plugin>
