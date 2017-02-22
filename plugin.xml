@@ -14,7 +14,7 @@
     <platform name="ios">
         
         <config-file target="config.xml" parent="/*" >
-            <feature name="StarPrinter">
+            <feature name="OmniPrinter">
                 <param name="ios-package" value="StarPrinter" />
             </feature>
         </config-file>
