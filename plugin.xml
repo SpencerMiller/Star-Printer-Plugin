@@ -9,31 +9,21 @@
     
     <js-module name="star-printer-plugin" src="www/star-printer-plugin.js">
         <clobbers target="cordova.plugins.StarPrinter" />
-    </js-module><platform name="ios">
+    </js-module>
+    
+    <platform name="ios">
         
-        <config-file parent="/*" target="config.xml">
+        <config-file target="config.xml" parent="/*" >
             <feature name="star-printer-plugin">
                 <param name="ios-package" value="StarPrinter" />
             </feature>
         </config-file>
-        
-        <!--<header-file src="src/ios/StarIO.framework/Headers/BluetoothPort.h">
-        <header-file src="src/ios/StarIO.framework/Headers/enum.h">
-        <header-file src="src/ios/StarIO.framework/Headers/Lock.h">
-        <header-file src="src/ios/StarIO.framework/Headers/Port.h">
-        <header-file src="src/ios/StarIO.framework/Headers/SMBluetoothManager.h">-->
-        <!--<header-file src="src/ios/star_io_framework/Headers/SMPort.h" />-->
-        <!--<header-file src="src/ios/StarIO.framework/Headers/SMProxiPRNTManager.h">
-        <header-file src="src/ios/StarIO.framework/Headers/WBluetoothPort.h">-->
-        <!--<source-file src="src/ios/StarIO.framework" />-->
-        <source-file src="src/ios/StarPrinter.m" />
-        <source-file src="src/ios/StarIO.framework/Versions/A/StarIO" framework="true" />  
-        <header-file src="src/ios/StarIO.framework/Versions/A/Headers/SMPort.h" />
 
         <framework src="ExternalAccessory.framework" />
         <framework src="CoreBluetooth.framework" />
+        <framework src="src/ios/StarIO.framework" custom="true"/>
         
-        <!-- Note this sort of works.  Will put the frame work in the build dependencies.  But the frame work has the incorrect path -->
-        <!--<framework src="src/ios/StarIO.framework" />-->
+        <source-file src="src/ios/StarPrinter.m" />
+        
     </platform>
 </plugin>
