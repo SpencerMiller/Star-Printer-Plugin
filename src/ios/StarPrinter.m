@@ -11,9 +11,20 @@
 
 - (void)getPrinters:(CDVInvokedUrlCommand*)command
 {
-    CDVPluginResult* pluginResult = nil;
+    NSLog(@"Inside getPrinters()");
+    CDVPluginResult *pluginResult = nil;
     
-    NSArray* portArray = [SMPort searchPrinter];
+    NSArray *portArray = [SMPort searchPrinter];
+
+    // Purly test logic to see if cordova is communicating with the method
+    PortInfo *port = [portArray objectAtIndex:0];
+    NSString *name = port.portName;
+    NSString *address = port.macAddress;
+    NSString *model = port.modelName;
+    
+    NSLog(@"Printer Name:  %@", model);
+    NSLog(@"Port Name:  %@", name);
+    NSLog(@"MAC Address:  %@", address);
     
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsMultipart:portArray];
     
