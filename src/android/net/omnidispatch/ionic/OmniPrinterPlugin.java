@@ -39,7 +39,7 @@ public class OmniPrinterPlugin extends CordovaPlugin {
                 status(device, callbackContext);
             } else if (action.equals("print")) {
                 String device = args.getString(0);
-                String content = args.getString(0);
+                String content = args.getString(1);
                 print(device, content, callbackContext);
             }
         } catch (JSONException e) {
