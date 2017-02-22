@@ -2,7 +2,7 @@
 
 #import <Foundation/Foundation.h>
 #import <Cordova/CDV.h>
-#import <StarIIO/SMPort.h>
+#import <StarIO/SMPort.h>
 
 
 @interface StarPrinter : CDVPlugin {
