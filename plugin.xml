@@ -11,13 +11,7 @@
         <clobbers target="OmniPrinter" />
     </js-module>
     
-    <platform name="ios">
-        <config-file target="*-Info.plist" parent="Supported external accessory protocols">
-            <array>
-                <string>jp.star-m.starpro</string>
-            </array>
-        </config-file>
-        
+    <platform name="ios">        
         <config-file target="config.xml" parent="/*" >
             <feature name="OmniPrinter">
                 <param name="ios-package" value="StarPrinter" />
@@ -30,7 +24,12 @@
         
         <source-file src="src/ios/StarPrinter.m" />
         <header-file src="src/ios/StarPrinter.h" />
-        
+
+        <config-file target="*-Info.plist" parent="Supported external accessory protocols">
+            <array>
+                <string>jp.star-m.starpro</string>
+            </array>
+        </config-file>        
     </platform>
 
     <platform name="android">
