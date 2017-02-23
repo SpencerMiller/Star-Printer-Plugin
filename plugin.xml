@@ -12,7 +12,7 @@
     </js-module>
     
     <platform name="ios">        
-        <preference name="STAR_EXTERNAL_ACCESSORY" default="jp.star-m.starpro">
+        <preference name="STAR_EXTERNAL_ACCESSORY" default="jp.star-m.starpro" />
 
         <config-file target="*-Info.plist" parent="Supported external accessory protocols">
             <array>
