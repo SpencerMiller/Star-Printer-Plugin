@@ -10,5 +10,7 @@
 }
 
 - (void)findDevices:(CDVInvokedUrlCommand*)command;
+
+- (void) print:(CDVInvokedUrlCommand*)command;
 @end
 
