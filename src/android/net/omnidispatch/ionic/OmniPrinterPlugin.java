@@ -1,6 +1,6 @@
 package net.omnidispatch.ionic;
 
-import java.util.List;
+import java.util.Set;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
@@ -10,15 +10,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.starmicronics.stario.PortInfo;
-import com.starmicronics.stario.StarIOPort;
-
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.os.ParcelUuid;
 import android.util.Log;
 
 public class OmniPrinterPlugin extends CordovaPlugin {
     static final String TAG = "OmniPrinter";
     static final int TIMEOUT = 10000;
+
+    static String formatResultError(Throwable t) {
+        return t.getMessage() + "\n" + Log.getStackTraceString(t);
+    }
 
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
@@ -37,7 +41,7 @@ public class OmniPrinterPlugin extends CordovaPlugin {
         } else if (action.equals("print")) {
             String device = args.getString(0);
             String content = args.getString(1);
-            cordova.getThreadPool().submit(new PrintExec(device, content, callbackContext, getContext()));
+            cordova.getThreadPool().submit(new PrintExec(device, content, callbackContext));
         }
         return true;
     }
@@ -46,24 +50,50 @@ public class OmniPrinterPlugin extends CordovaPlugin {
         return cordova.getActivity().getApplicationContext();
     }
 
-    private void findDevices(CallbackContext callbackContext) {
-        try {
-            List<PortInfo> ports = StarIOPort.searchPrinter("BT:", getContext());
-            JSONArray result = new JSONArray();
+    private void findDevices(CallbackContext callbackContext) throws JSONException {
+//        try {
+//            List<PortInfo> ports = StarIOPort.searchPrinter("BT:", getContext());
+//            JSONArray result = new JSONArray();
+//
+//            for (PortInfo port : ports) {
+//                JSONObject obj = new JSONObject();
+//                result.put(obj);
+//
+//                obj.put("mac", port.getMacAddress());
+//                obj.put("usbSerial", port.getUSBSerialNumber());
+//                obj.put("model", port.getModelName());
+//                obj.put("port", port.getPortName());
+//            }
+//
+//            callbackContext.success(result);
+//        } catch (Exception e) {
+//            callbackContext.error(PrinterExec.formatResultError(e));
+//        }
+        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
+        JSONArray result = new JSONArray();
 
-            for (PortInfo port : ports) {
-                JSONObject obj = new JSONObject();
-                result.put(obj);
+        if (pairedDevices.size() > 0) {
+            // There are paired devices. Get the name and address of each paired device.
+            for (BluetoothDevice device : pairedDevices) {
+                if (device.getAddress().startsWith("00:15:0E")) {
+                    JSONObject obj = new JSONObject();
+                    result.put(obj);
 
-                obj.put("mac", port.getMacAddress());
-                obj.put("usbSerial", port.getUSBSerialNumber());
-                obj.put("model", port.getModelName());
-                obj.put("port", port.getPortName());
+                    obj.put("name", device.getName());
+                    obj.put("deviceHardwareAddress", device.getAddress());
+                    obj.put("classDevice", device.getBluetoothClass().getDeviceClass());
+                    obj.put("classMajorDevice", device.getBluetoothClass().getMajorDeviceClass());
+
+                    JSONArray uuids = new JSONArray();
+                    obj.put("uuids", uuids);
+                    for (ParcelUuid uuid : device.getUuids()) {
+                        uuids.put(uuid.toString());
+                    }
+                }
             }
-
-            callbackContext.success(result);
-        } catch (Exception e) {
-            callbackContext.error(PrinterExec.formatResultError(e));
         }
+
+        callbackContext.success(result);
     }
 }
