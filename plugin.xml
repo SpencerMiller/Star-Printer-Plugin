@@ -25,11 +25,13 @@
         <source-file src="src/ios/StarPrinter.m" />
         <header-file src="src/ios/StarPrinter.h" />
 
-        <config-file target="*-Info.plist" parent="Supported external accessory protocols">
+        <!-- This config does enter the property into the info.plist.  However the printer still does not work unless this property is
+        hand entered. -->
+        <!--<config-file target="*-Info.plist" parent="Supported external accessory protocols">
             <array>
                 <string>jp.star-m.starpro</string>
             </array>
-        </config-file>        
+        </config-file>  -->
     </platform>
 
     <platform name="android">

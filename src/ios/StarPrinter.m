@@ -14,19 +14,34 @@
     NSLog(@"Inside findDevices()");
     CDVPluginResult *pluginResult = nil;
     
-    NSArray *portArray = [SMPort searchPrinter];
-
-    // Purly test logic to see if cordova is communicating with the method
-    PortInfo *port = [portArray objectAtIndex:0];
-    NSString *name = port.portName;
-    NSString *address = port.macAddress;
-    NSString *model = port.modelName;
+        NSArray *portArray = [SMPort searchPrinter];
     
-    NSLog(@"Printer Name:  %@", model);
-    NSLog(@"Port Name:  %@", name);
-    NSLog(@"MAC Address:  %@", address);
+    NSMutableArray *jsonArray = [[NSMutableArray alloc]init];
     
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsMultipart:portArray];
+    for (int i = 0; i < portArray.count; i++)
+    {
+        PortInfo *portInfo = [portArray objectAtIndex:i];
+        NSString *mac = portInfo.macAddress;
+        NSString *model = portInfo.modelName;
+        NSString *port = portInfo.portName;
+        
+        NSLog(@"MAC Address:  %@", mac);
+        NSLog(@"Printer Name:  %@", model);
+        NSLog(@"Port Name:  %@", port);
+        
+        NSDictionary *printer = @{
+                                  @"mac" : mac,
+                                  @"model" : model,
+                                  @"ort" : port,
+                                  };
+        
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:printer options:NSJSONWritingPrettyPrinted error:NULL];
+        
+        [jsonArray addObject:jsonData];
+        
+    }
+    
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsMultipart:jsonArray];
     
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
