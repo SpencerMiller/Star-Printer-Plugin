@@ -51,6 +51,7 @@
 
     NSString *device = [command.arguments objectAtIndex:0];
     unsigned char printCommands = [command.arguments objectAtIndex:1];
+    int numberOfBytes = sizeof(printCommands);
 
     uint bytesWritten = 0;
     SMPort *port = nil;
@@ -111,9 +112,9 @@
     // Print
     @try
     {
-        while (bytesWritten < arraySize)
+        while (bytesWritten < numberOfBytes)
         {
-            bytesWritten += [port writePort:printCommands :bytesWritten : arraySize - bytesWritten];
+            bytesWritten += [port writePort:printCommands :bytesWritten : numberOfBytes - bytesWritten];
         }
         
     }
@@ -125,7 +126,7 @@
     @finally
     {
         [SMPort releasePort:port];
-         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK]
+         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     }
 }
 
