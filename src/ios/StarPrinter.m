@@ -11,6 +11,8 @@
 
 - (void)findDevices:(CDVInvokedUrlCommand*)command
 {
+  // Wrap method loic in a delegate to seperate thread
+  [self.commandDelegate runInBackground:^{
     CDVPluginResult *pluginResult = nil;
     
     NSArray *portArray = [SMPort searchPrinter];
@@ -35,12 +37,12 @@
                                   };
         
         [jsonArray addObject:printer];
-        
     }
     
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsMultipart:jsonArray];
     
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+  }];
 }
 
 - (void) print:(CDVInvokedUrlCommand*)command
@@ -89,7 +91,7 @@
         }
         @catch (NSException *exception) 
         {
-            NSLog(@"Error with printer port - %@.", message, exception.description);
+            NSLog(@"Error with printer port - %@.", exception.description);
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.description];
         }
     }
@@ -101,7 +103,7 @@
         }
         @catch (NSException *exception) 
         {
-            NSLog(@"Error with printer port - %@.", message, exception.description);
+            NSLog(@"Error with printer port - %@.", exception.description);
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.description];
         }
     }
@@ -117,7 +119,7 @@
     }
     @catch (NSException *exception) 
     {
-        NSLog(@"Error with printer port - %@.", message, exception.description);
+        NSLog(@"Error with printer port - %@.", exception.description);
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.description];
     }
     @finally
