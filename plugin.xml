@@ -42,11 +42,15 @@
         </config-file>
 
         <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
             <uses-permission android:name="android.permission.BLUETOOTH"/>
             <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
         </config-file>
 
         <source-file src="src/android/net/omnidispatch/ionic/OmniPrinterPlugin.java" target-dir="src/net/omnidispatch/ionic/" />
+        <source-file src="src/android/net/omnidispatch/ionic/PrinterExec.java" target-dir="src/net/omnidispatch/ionic/" />
+        <source-file src="src/android/net/omnidispatch/ionic/PrinterStatusExec.java" target-dir="src/net/omnidispatch/ionic/" />
+        <source-file src="src/android/net/omnidispatch/ionic/PrintExec.java" target-dir="src/net/omnidispatch/ionic/" />
         <source-file src="src/android/StarIOPort3.1.jar" target-dir="libs" />
     </platform>
 </plugin>
