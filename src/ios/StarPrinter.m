@@ -35,9 +35,7 @@
                                   @"ort" : port,
                                   };
         
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:printer options:NSJSONWritingPrettyPrinted error:NULL];
-        
-        [jsonArray addObject:jsonData];
+        [jsonArray addObject:printer];
         
     }
     
