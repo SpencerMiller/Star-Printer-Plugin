@@ -11,14 +11,16 @@
         <clobbers target="OmniPrinter" />
     </js-module>
     
-    <platform name="ios">        
-        <preference name="STAR_EXTERNAL_ACCESSORY" default="jp.star-m.starpro" />
+    <platform name="ios">     
+        <!-- The following tags do set the External Accesory Property in the .plist file.  However the setting is not used org
+        recognized in the build process unless hand endtered -->   
+        <!--<preference name="STAR_EXTERNAL_ACCESSORY" default="jp.star-m.starpro" />
 
         <config-file target="*-Info.plist" parent="Supported external accessory protocols">
             <array>
                 <string>$STAR_EXTERNAL_ACCESSORY</string>
             </array>
-        </config-file>
+        </config-file>-->
 
         <config-file target="config.xml" parent="/*" >
             <feature name="OmniPrinter">

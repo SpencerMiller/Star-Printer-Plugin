@@ -33,7 +33,7 @@
         NSDictionary *printer = @{
                                   @"mac" : mac,
                                   @"model" : model,
-                                  @"ort" : port,
+                                  @"port" : port,
                                   };
         
         [jsonArray addObject:printer];
