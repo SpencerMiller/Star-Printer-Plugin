@@ -43,17 +43,29 @@
 
 - (void) print:(CDVInvokedUrlCommand*)command
 {
-    NSLog("@ Inside the IOS print method");
+    NSLog(@" Inside the IOS print method");
+
+    NSLog(@" Inside the IOS print method");
 
     CDVPluginResult *pluginResult = nil;
 
     NSString *device = [command.arguments objectAtIndex:0];
-    unsigned char printCommands = [command.arguments objectAtIndex:1];
-    int numberOfBytes = sizeof(printCommands);
-
-    NSLog(@"Printer:  %@", devices);
-    NSLog(@"printCommands:  %s", printCommands);
+    NSArray *printCommandsArray = [command.arguments objectAtIndex:1];
+    int numberOfBytes = sizeof(printCommandsArray);
+    NSData *printCommandsData = [command.arguments objectAtIndex:1];
+    
+    NSLog(@"Printer:  %@", device);
     NSLog(@"Print commands length:  %d", numberOfBytes);
+    
+    Byte *byteData = (Byte*)malloc(numberOfBytes);
+    memcpy(byteData, [printCommandsData bytes], numberOfBytes);
+    
+//    unsigned char printCommand[numberOfBytes];
+//    for (int i = 0; i < numberOfBytes; i++) {
+//        NSLog(@"Value from NSArray:  %c", [printCommandsArray objectAtIndex:i]);
+//        printCommand[i] = [[printCommandsArray objectAtIndex:i] charValue];
+//        NSLog(@"converted char:  %c", printCommand[i]);
+//    }
 
     uint bytesWritten = 0;
     SMPort *port = nil;
@@ -116,7 +128,7 @@
     {
         while (bytesWritten < numberOfBytes)
         {
-            bytesWritten += [port writePort:printCommands :bytesWritten : numberOfBytes - bytesWritten];
+            bytesWritten += [port writePort:byteData :bytesWritten : numberOfBytes - bytesWritten];
         }
         
     }
