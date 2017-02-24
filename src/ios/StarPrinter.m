@@ -43,11 +43,17 @@
 
 - (void) print:(CDVInvokedUrlCommand*)command
 {
+    NSLog("@ Inside the IOS print method");
+
     CDVPluginResult *pluginResult = nil;
 
     NSString *device = [command.arguments objectAtIndex:0];
     unsigned char printCommands = [command.arguments objectAtIndex:1];
     int numberOfBytes = sizeof(printCommands);
+
+    NSLog(@"Printer:  %@", devices);
+    NSLog(@"printCommands:  %s", printCommands);
+    NSLog(@"Print commands length:  %d", numberOfBytes);
 
     uint bytesWritten = 0;
     SMPort *port = nil;
