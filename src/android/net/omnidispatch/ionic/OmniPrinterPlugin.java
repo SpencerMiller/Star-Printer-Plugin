@@ -36,12 +36,12 @@ public class OmniPrinterPlugin extends CordovaPlugin {
         if (action.equals("findDevices")) {
             findDevices(callbackContext);
         } else if (action.equals("status")) {
-            String device = args.getString(0);
-            cordova.getThreadPool().submit(new PrinterStatusExec(device, callbackContext, getContext()));
+            String address = args.getString(0);
+            cordova.getThreadPool().submit(new PrinterStatusExec(address, callbackContext, getContext()));
         } else if (action.equals("print")) {
-            String device = args.getString(0);
+            String address = args.getString(0);
             String content = args.getString(1);
-            cordova.getThreadPool().submit(new PrintExec(device, content, callbackContext));
+            cordova.getThreadPool().submit(new PrintExec(address, content, callbackContext));
         }
         return true;
     }
