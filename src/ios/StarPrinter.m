@@ -30,13 +30,9 @@
         NSLog(@"Printer Name:  %@", model);
         NSLog(@"Port Name:  %@", port);
         
-        NSDictionary *printer = @{
-                                  @"mac" : mac,
-                                  @"model" : model,
-                                  @"port" : port,
-                                  };
+        NSString *printerJSON = [NSString stringWithFormat:@"{ \"mac\":\"%@\", \"model\":\"%@\", \"port\":\"%@\" }", mac, model, port];
         
-        [jsonArray addObject:printer];
+        [jsonArray addObject:printerJSON];
     }
     
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsMultipart:jsonArray];
