@@ -43,105 +43,111 @@
 
 - (void) print:(CDVInvokedUrlCommand*)command
 {
-    NSLog(@" Inside the IOS print method");
+    // Run print command in a seperate thread
+    [self.commandDelegate runInBackground:^{
+        CDVPluginResult *pluginResult = nil;
 
-    NSLog(@" Inside the IOS print method");
+        NSString *device = [command.arguments objectAtIndex:0];
 
-    CDVPluginResult *pluginResult = nil;
+        NSString *printString = [command.arguments objectAtIndex:1];
 
-    NSString *device = [command.arguments objectAtIndex:0];
-    NSArray *printCommandsArray = [command.arguments objectAtIndex:1];
-    int numberOfBytes = sizeof(printCommandsArray);
-    NSData *printCommandsData = [command.arguments objectAtIndex:1];
-    
-    NSLog(@"Printer:  %@", device);
-    NSLog(@"Print commands length:  %d", numberOfBytes);
-    
-    Byte *byteData = (Byte*)malloc(numberOfBytes);
-    memcpy(byteData, [printCommandsData bytes], numberOfBytes);
-    
-//    unsigned char printCommand[numberOfBytes];
-//    for (int i = 0; i < numberOfBytes; i++) {
-//        NSLog(@"Value from NSArray:  %c", [printCommandsArray objectAtIndex:i]);
-//        printCommand[i] = [[printCommandsArray objectAtIndex:i] charValue];
-//        NSLog(@"converted char:  %c", printCommand[i]);
-//    }
+        /* Star printer takes 6 additional characters to be appended to the end of a print array to print correctly.  
+        'ESC, z, NUL, ESC, d, STX'  The plus 6 provides array space for these extra characters.  */
+        int length = (int)[printString length] + 6;
 
-    uint bytesWritten = 0;
-    SMPort *port = nil;
-    NSError *error = NULL;
-    BOOL isMacAddress = NO;
-    BOOL isPort = NO;
+        uint8_t printCommand[length];
     
-    NSRegularExpression *regexMac = [NSRegularExpression regularExpressionWithPattern:@"^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$" options:NSRegularExpressionCaseInsensitive error:&error];
-    NSUInteger numberOfMatches = [regexMac numberOfMatchesInString:device options:0 range:NSMakeRange(0, [device length])];
-    if (numberOfMatches > 0) 
-    {
-        isMacAddress = YES;
-        NSLog(@"Is Mac Address:  %d", isMacAddress);
-    }
-    
-    NSRegularExpression *regexPort = [NSRegularExpression regularExpressionWithPattern:@"BT:.*" options:NSRegularExpressionCaseInsensitive error:&error];
-    numberOfMatches = [regexPort numberOfMatchesInString:device options:0 range:NSMakeRange(0, [device length])];
-    if (numberOfMatches > 0) 
-    {
-        isPort = YES;
-        NSLog(@"Is Port:  %d", isPort);
-    }
-    
-    if (!isMacAddress || !isPort) 
-    {
-        NSString *message = @"Invalid device:  ";
-        NSLog(@"%@ %@.", message, device);
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:message];
-    }
-    
-    // IOS 6 devices use the MAC Address to obtain the port.  Though it appears all printing will work via MAC address
-    if (isMacAddress)
-    {
-        NSString *portWithMAC = [NSString stringWithFormat:@"BT:%@", device];
-        @try
+        int index = 0;
+        for (int i = 0; i < length -6; i++)
         {
-            port = [SMPort getPort:portWithMAC :@"" :1000];
-        }
-        @catch (NSException *exception) 
-        {
-            NSLog(@"Error with printer port - %@.", exception.description);
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.description];
-        }
-    }
-    else if (isPort)
-    {
-        @try
-        {
-            port = [SMPort getPort:device :@"" :1000];
-        }
-        @catch (NSException *exception) 
-        {
-            NSLog(@"Error with printer port - %@.", exception.description);
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.description];
-        }
-    }
-
-    // Print
-    @try
-    {
-        while (bytesWritten < numberOfBytes)
-        {
-            bytesWritten += [port writePort:byteData :bytesWritten : numberOfBytes - bytesWritten];
+            printCommand[i] = (char)[printString characterAtIndex:i];
+            index ++;
         }
         
-    }
-    @catch (NSException *exception) 
-    {
-        NSLog(@"Error with printer port - %@.", exception.description);
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.description];
-    }
-    @finally
-    {
-        [SMPort releasePort:port];
-         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-    }
+        // Ending print commands
+        printCommand[index++] = 0x1B;
+        printCommand[index++] = 0x7A;
+        printCommand[index++] = 0x00;
+        printCommand[index++] = 0x1B;
+        printCommand[index++] = 0x64;
+        printCommand[index] = 0x02;
+
+        uint bytesWritten = 0;
+        SMPort *port = nil;
+        NSError *error = NULL;
+        BOOL isMacAddress = NO;
+        BOOL isPort = NO;
+    
+        // Port can be obtained with either a Mac Address or Port name.  The following logic determines which was passed in
+        NSRegularExpression *regexMac = [NSRegularExpression regularExpressionWithPattern:@"^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$" options:NSRegularExpressionCaseInsensitive error:&error];
+        NSUInteger numberOfMatches = [regexMac numberOfMatchesInString:device options:0 range:NSMakeRange(0, [device length])];
+        if (numberOfMatches > 0)
+        {
+            isMacAddress = YES;
+            NSLog(@"Is Mac Address:  %d", isMacAddress);
+        }
+    
+        NSRegularExpression *regexPort = [NSRegularExpression regularExpressionWithPattern:@"BT:.*" options:NSRegularExpressionCaseInsensitive error:&error];
+        numberOfMatches = [regexPort numberOfMatchesInString:device options:0 range:NSMakeRange(0, [device length])];
+        if (numberOfMatches > 0)
+        {
+            isPort = YES;
+            NSLog(@"Is Port:  %d", isPort);
+        }
+    
+        if (!isMacAddress && !isPort)
+        {
+            NSString *message = @"Invalid device:  ";
+            NSLog(@"%@ %@.", message, device);
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:message];
+        }
+    
+        if (isMacAddress)
+        {
+            NSString *portWithMAC = [NSString stringWithFormat:@"BT:%@", device];
+            @try
+            {
+                port = [SMPort getPort:portWithMAC :@"" :1000];
+            }
+            @catch (NSException *exception)
+            {
+                NSLog(@"Error with printer port - %@.", exception.description);
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.description];
+            }
+        }
+        else if (isPort)
+        {
+            @try
+            {
+                port = [SMPort getPort:device :@"" :1000];
+            }
+            @catch (NSException *exception)
+            {
+                NSLog(@"Error with printer port - %@.", exception.description);
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.description];
+            }
+        }
+
+        // If a port was obtained the following will execute the print command
+        @try
+        {
+            while (bytesWritten < length)
+            {
+                bytesWritten += [port writePort:printCommand :bytesWritten : length - bytesWritten];
+            }
+        
+        }
+        @catch (NSException *exception)
+        {
+            NSLog(@"Error with printer port - %@.", exception.description);
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.description];
+        }
+        @finally
+        {
+            [SMPort releasePort:port];
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        }
+    }];
 }
 
 @end
