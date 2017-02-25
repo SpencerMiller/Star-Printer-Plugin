@@ -13,12 +13,12 @@ import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
 public class PrintExec implements Runnable {
-    private final String portName;
+    private final String address;
     private final String content;
     private final CallbackContext callbackContext;
 
-    public PrintExec(String portName, String content, CallbackContext callbackContext) {
-        this.portName = portName;
+    public PrintExec(String address, String content, CallbackContext callbackContext) {
+        this.address = address;
         this.content = content;
         this.callbackContext = callbackContext;
     }
@@ -29,7 +29,7 @@ public class PrintExec implements Runnable {
         try {
             BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 
-            BluetoothDevice device = adapter.getRemoteDevice("00:15:0E:E5:71:C6");
+            BluetoothDevice device = adapter.getRemoteDevice(address);
             BluetoothSocket socket = device.createRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
             socket.connect();
 
