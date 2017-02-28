@@ -81,7 +81,7 @@ public class OmniPrinterPlugin extends CordovaPlugin {
                     result.put(obj);
 
                     obj.put("name", device.getName());
-                    obj.put("id", device.getAddress());
+                    obj.put("mac", device.getAddress());
                     obj.put("classDevice", device.getBluetoothClass().getDeviceClass());
                     obj.put("classMajorDevice", device.getBluetoothClass().getMajorDeviceClass());
 
