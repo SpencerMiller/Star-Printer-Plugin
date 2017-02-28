@@ -11,34 +11,46 @@
 
 - (void)findDevices:(CDVInvokedUrlCommand*)command
 {
-  // Wrap method loic in a delegate to seperate thread
-  [self.commandDelegate runInBackground:^{
-    CDVPluginResult *pluginResult = nil;
-    
-    NSArray *portArray = [SMPort searchPrinter];
-    
-    NSMutableArray *jsonArray = [[NSMutableArray alloc]init];
-    
-    for (int i = 0; i < portArray.count; i++)
-    {
-        PortInfo *portInfo = [portArray objectAtIndex:i];
-        NSString *mac = portInfo.macAddress;
-        NSString *model = portInfo.modelName;
-        NSString *port = portInfo.portName;
+    // Wrap method logic in a delegate to spin off to seperate thread
+    [self.commandDelegate runInBackground:^{
+        CDVPluginResult *pluginResult = nil;
         
-        NSLog(@"MAC Address:  %@", mac);
-        NSLog(@"Printer Name:  %@", model);
-        NSLog(@"Port Name:  %@", port);
+        NSArray *portArray = [SMPort searchPrinter];
         
-        NSString *printerJSON = [NSString stringWithFormat:@"{ \"mac\":\"%@\", \"model\":\"%@\", \"port\":\"%@\" }", mac, model, port];
+        NSMutableString *jsonArray = [[NSMutableString alloc]init];
         
-        [jsonArray addObject:printerJSON];
-    }
-    
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsMultipart:jsonArray];
-    
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-  }];
+        for (int i = 0; i < portArray.count; i++)
+        {
+            PortInfo *portInfo = [portArray objectAtIndex:i];
+            NSString *mac = portInfo.macAddress;
+            NSString *model = portInfo.modelName;
+            NSString *port = portInfo.portName;
+            
+            NSLog(@"MAC Address:  %@", mac);
+            NSLog(@"Printer Name:  %@", model);
+            NSLog(@"Port Name:  %@", port);
+            
+            if (i == 0)
+            {
+                NSString *printerJSON = [NSString stringWithFormat:@"[{\"name\":\"%@\",\"id\":\"%@\"}", model, port];
+                [jsonArray appendString:printerJSON];
+            }
+            else
+            {
+                NSString *printerJSON = [NSString stringWithFormat:@",{\"name\":\"%@\",\"id\":\"%@\"}", model, port];
+                [jsonArray appendString:printerJSON];
+            }
+        }
+        
+        NSString *jsonArrayEndChar = @"]";
+        [jsonArray appendString:jsonArrayEndChar];
+        
+        NSLog(@"Printer JSON:  %@", jsonArray);
+        
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonArray];
+        
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
 }
 
 - (void) print:(CDVInvokedUrlCommand*)command
