@@ -7,11 +7,11 @@
     
     <name>star-printer-plugin</name>
     
-    <js-module name="omni-printer-plugin" src="www/plugin.js">
-        <clobbers target="OmniPrinter" />
-    </js-module>
+    <platform name="ios">
+        <js-module name="omni-printer-plugin" src="www/ios.js">
+            <clobbers target="OmniPrinter" />
+        </js-module>
     
-    <platform name="ios">     
         <!-- The following tags do set the External Accesory Property in the .plist file.  However the setting is not used org
         recognized in the build process unless hand endtered -->   
         <!--<preference name="STAR_EXTERNAL_ACCESSORY" default="jp.star-m.starpro" />
@@ -37,6 +37,10 @@
     </platform>
 
     <platform name="android">
+        <js-module name="omni-printer-plugin" src="www/android.js">
+            <clobbers target="OmniPrinter" />
+        </js-module>
+      
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="OmniPrinter">
                 <param name="android-package" value="net.omnidispatch.ionic.OmniPrinterPlugin" />
