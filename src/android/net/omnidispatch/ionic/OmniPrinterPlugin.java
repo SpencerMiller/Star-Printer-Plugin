@@ -40,7 +40,7 @@ public class OmniPrinterPlugin extends CordovaPlugin {
             cordova.getThreadPool().submit(new PrinterStatusExec(address, callbackContext, getContext()));
         } else if (action.equals("print")) {
             String address = args.getString(0);
-            String content = args.getString(1);
+            JSONArray content = args.getJSONArray(1);
             cordova.getThreadPool().submit(new PrintExec(address, content, callbackContext));
         }
         return true;
