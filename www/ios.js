@@ -12,9 +12,7 @@ module.exports = {
 
     status: function(device) {
         return new Promise(function(resolve, reject) {
-            exec(function(devices) {
-                resolve = JSON.parse(devices);
-            }, reject, 'OmniPrinter', 'status', [device]);
+            exec(resolve, reject, 'OmniPrinter', 'status', [device]);
         });
     },
 
