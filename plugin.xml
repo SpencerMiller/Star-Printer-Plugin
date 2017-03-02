@@ -54,8 +54,6 @@
         </config-file>
 
         <source-file src="src/android/net/omnidispatch/ionic/OmniPrinterPlugin.java" target-dir="src/net/omnidispatch/ionic/" />
-        <source-file src="src/android/net/omnidispatch/ionic/PrinterStatusExec.java" target-dir="src/net/omnidispatch/ionic/" />
         <source-file src="src/android/net/omnidispatch/ionic/PrintExec.java" target-dir="src/net/omnidispatch/ionic/" />
-        <source-file src="src/android/StarIOPort3.1.jar" target-dir="libs" />
     </platform>
 </plugin>
