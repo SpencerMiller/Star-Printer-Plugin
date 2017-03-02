@@ -34,12 +34,12 @@
             
                 if (i == 0)
                 {
-                    NSString *printerJSON = [NSString stringWithFormat:@"[{\"name\":\"%@\",\"mac\":\"%@\"}", model, port];
+                    NSString *printerJSON = [NSString stringWithFormat:@"[{\"name\":\"%@\",\"id\":\"%@\"}", model, port];
                     [jsonArray appendString:printerJSON];
                 }
                 else
                 {
-                    NSString *printerJSON = [NSString stringWithFormat:@",{\"name\":\"%@\",\"mac\":\"%@\"}", model, port];
+                    NSString *printerJSON = [NSString stringWithFormat:@",{\"name\":\"%@\",\"id\":\"%@\"}", model, port];
                     [jsonArray appendString:printerJSON];
                 }
             }
