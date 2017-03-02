@@ -12,8 +12,8 @@ module.exports = {
 
     status: function(device) {
         return new Promise(function(resolve, reject) {
-            exec((printers) => {
-                resolve = JSON.parse(printers);
+            exec(function(devices) {
+                resolve = JSON.parse(devices);
             }, reject, 'OmniPrinter', 'status', [device]);
         });
     },
