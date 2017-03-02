@@ -42,8 +42,11 @@
             }
         }
         
-        NSString *jsonArrayEndChar = @"]";
-        [jsonArray appendString:jsonArrayEndChar];
+        if ([portArray count] > 0) 
+        {
+            NSString *jsonArrayEndChar = @"]";
+            [jsonArray appendString:jsonArrayEndChar];
+        }
         
         NSLog(@"Printer JSON:  %@", jsonArray);
         
@@ -70,8 +73,6 @@
         int index = 0;
         for (int i = 0; i < length - 3; i++)
         {
-            NSLog(@"Print Command before cast:  %@", [printArray objectAtIndex:i]);
-            
             printCommand[i] = [[printArray objectAtIndex:i] intValue];
             
             index ++;
