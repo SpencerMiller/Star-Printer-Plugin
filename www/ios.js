@@ -5,9 +5,8 @@ var exec = require('cordova/exec');
 module.exports = {
     findDevices: function() {
         return new Promise(function(resolve, reject) {
-            exec(function(devices) { resolve = JSON.parse(devices); }, reject, 'OmniPrinter', 'findDevices');
+            exec(resolve, reject, 'OmniPrinter', 'findDevices');
         });
-
     },
 
     print: function(device, content) {
