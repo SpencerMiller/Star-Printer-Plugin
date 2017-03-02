@@ -60,26 +60,24 @@
         CDVPluginResult *pluginResult = nil;
 
         NSString *device = [command.arguments objectAtIndex:0];
+        NSArray *printArray = [command.arguments objectAtIndex:1];
 
-        NSString *printString = [command.arguments objectAtIndex:1];
-
-        /* Star printer takes 6 additional characters to be appended to the end of a print array to print correctly.  
-        'ESC, z, NUL, ESC, d, STX'  The plus 6 provides array space for these extra characters.  */
-        int length = (int)[printString length] + 6;
-
+         /* Star printer needs 3 additional characters appended to the end of a print array to print correctly. */
+        int length = (int)[printArray count] + 3;
+        
         uint8_t printCommand[length];
-    
+        
         int index = 0;
-        for (int i = 0; i < length -6; i++)
+        for (int i = 0; i < length - 3; i++)
         {
-            printCommand[i] = (char)[printString characterAtIndex:i];
+            NSLog(@"Print Command before cast:  %@", [printArray objectAtIndex:i]);
+            
+            printCommand[i] = [[printArray objectAtIndex:i] intValue];
+            
             index ++;
         }
         
         // Ending print commands
-        printCommand[index++] = 0x1B;
-        printCommand[index++] = 0x7A;
-        printCommand[index++] = 0x00;
         printCommand[index++] = 0x1B;
         printCommand[index++] = 0x64;
         printCommand[index] = 0x02;
