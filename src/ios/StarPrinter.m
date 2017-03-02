@@ -19,31 +19,31 @@
         
         NSMutableString *jsonArray = [[NSMutableString alloc]init];
         
-        for (int i = 0; i < portArray.count; i++)
+        if (portArray.count > 0)
         {
-            PortInfo *portInfo = [portArray objectAtIndex:i];
-            NSString *mac = portInfo.macAddress;
-            NSString *model = portInfo.modelName;
-            NSString *port = portInfo.portName;
-            
-            NSLog(@"MAC Address:  %@", mac);
-            NSLog(@"Printer Name:  %@", model);
-            NSLog(@"Port Name:  %@", port);
-            
-            if (i == 0)
+            for (int i = 0; i < portArray.count; i++)
             {
-                NSString *printerJSON = [NSString stringWithFormat:@"[{\"name\":\"%@\",\"id\":\"%@\"}", model, port];
-                [jsonArray appendString:printerJSON];
+                PortInfo *portInfo = [portArray objectAtIndex:i];
+                NSString *mac = portInfo.macAddress;
+                NSString *model = portInfo.modelName;
+                NSString *port = portInfo.portName;
+            
+                NSLog(@"MAC Address:  %@", mac);
+                NSLog(@"Printer Name:  %@", model);
+                NSLog(@"Port Name:  %@", port);
+            
+                if (i == 0)
+                {
+                    NSString *printerJSON = [NSString stringWithFormat:@"[{\"name\":\"%@\",\"id\":\"%@\"}", model, port];
+                    [jsonArray appendString:printerJSON];
+                }
+                else
+                {
+                    NSString *printerJSON = [NSString stringWithFormat:@",{\"name\":\"%@\",\"id\":\"%@\"}", model, port];
+                    [jsonArray appendString:printerJSON];
+                }
             }
-            else
-            {
-                NSString *printerJSON = [NSString stringWithFormat:@",{\"name\":\"%@\",\"id\":\"%@\"}", model, port];
-                [jsonArray appendString:printerJSON];
-            }
-        }
         
-        if ([portArray count] > 0) 
-        {
             NSString *jsonArrayEndChar = @"]";
             [jsonArray appendString:jsonArrayEndChar];
         }
