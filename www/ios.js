@@ -18,7 +18,7 @@ module.exports = {
 
     print: function(device, content) {
         return new Promise(function(resolve, reject) {
-            exec(resolve, reject, 'OmniPrinter', 'print', [device, content]);
+            exec(function(devices) { resolve = JSON.parse(devices); }, reject, 'OmniPrinter', 'print', [device, content]);
         });
     },
 };
