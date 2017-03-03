@@ -77,6 +77,7 @@
         }
 
         uint bytesWritten = 0;
+        StarPrinterStatus_2 starPrinterStatus;
         SMPort *port = nil;
         NSError *error = NULL;
         BOOL isMacAddress = NO;
@@ -111,9 +112,9 @@
             NSString *portWithMAC = [NSString stringWithFormat:@"BT:%@", device];
             @try
             {
-                port = [SMPort getPort:portWithMAC :@"" :1000];
+                port = [SMPort getPort:portWithMAC :@"" :5000];
             }
-            @catch (NSException *exception)
+            @catch (PortException *exception)
             {
                 NSLog(@"Error with printer port - %@.", exception.description);
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.description];
@@ -123,33 +124,48 @@
         {
             @try
             {
-                port = [SMPort getPort:device :@"" :1000];
+                port = [SMPort getPort:device :@"" :5000];
             }
-            @catch (NSException *exception)
+            @catch (PortException *exception)
             {
                 NSLog(@"Error with printer port - %@.", exception.description);
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.description];
             }
         }
 
-        // If a port was obtained the following will execute the print command
-        @try
+        if (port != NULL)
         {
-            while (bytesWritten < length)
+            // If a port was obtained the following will execute the print command
+            @try
             {
-                bytesWritten += [port writePort:printCommand :bytesWritten : length - bytesWritten];
-            }
+                while (bytesWritten < length)
+                {
+                    bytesWritten += [port writePort:printCommand :bytesWritten : length - bytesWritten];
+                }
+                
+                // End checking the completion of printing
+                [port endCheckedBlock:&starPrinterStatus :2];
+                
+                if (starPrinterStatus.offline == SM_TRUE)
+                {
+                    NSLog(@"Printer is offline!");
+                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Printer is offline!"];
+                    
+                }
         
-        }
-        @catch (NSException *exception)
-        {
-            NSLog(@"Error with printer port - %@.", exception.description);
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.description];
-        }
-        @finally
-        {
-            [SMPort releasePort:port];
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            }
+            @catch (PortException *exception)
+            {
+                NSLog(@"Error with printer port - %@.", exception.description);
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.description];
+            }
+            @finally
+            {
+                NSLog(@"Port closed");
+            
+                [SMPort releasePort:port];
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            }
         }
     }];
 }
