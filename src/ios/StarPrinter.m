@@ -65,23 +65,16 @@
         NSString *device = [command.arguments objectAtIndex:0];
         NSArray *printArray = [command.arguments objectAtIndex:1];
 
-         /* Star printer needs 3 additional characters appended to the end of a print array to print correctly. */
-        int length = (int)[printArray count] + 3;
+        int length = (int)[printArray count];
         
         uint8_t printCommand[length];
         
         int index = 0;
-        for (int i = 0; i < length - 3; i++)
+        for (int i = 0; i < length; i++)
         {
             printCommand[i] = [[printArray objectAtIndex:i] intValue];
-            
             index ++;
         }
-        
-        // Ending print commands
-        printCommand[index++] = 0x1B;
-        printCommand[index++] = 0x64;
-        printCommand[index] = 0x02;
 
         uint bytesWritten = 0;
         SMPort *port = nil;
