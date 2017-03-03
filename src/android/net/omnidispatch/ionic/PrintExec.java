@@ -34,15 +34,11 @@ public class PrintExec implements Runnable {
             BluetoothSocket socket = device.createRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
             socket.connect();
 
-            out = new BufferedOutputStream(socket.getOutputStream());
-            out.write(new byte[]{0x1b, 0x40}); // ESC @ - Initialize printer
+            //out.write(new byte[]{0x1b, 0x40}); // ESC @ - Initialize printer
             for (int i = 0; i < content.length(); i++) {
                 out.write(content.getInt(i));
             }
-            //out.write(content.getBytes());
-
-            // x lines for stamp + 5 to feed past cutter
-            out.write(new byte[]{0x1b, 0x64, 5}); // ESC d n - Prints the data in the print buffer and feeds n lines
+            
             out.flush();
             // none of out.flush(), out.close() nor socket.close() appear to wait for the buffer to flush so we wait here
             try {
